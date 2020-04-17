@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.textView);
         btnTrocarUsuario = findViewById(R.id.btnTrocar);
 
+        setInitialMessage(savedInstanceState);
+
+
         btnTrocarUsuario.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,10 +35,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setInitialMessage(Bundle savedInstanceState){
+        if(savedInstanceState != null){
+            usuario = savedInstanceState.getString("USUARIO", "");
+        }
+        setFinalMessage();
+    }
+
+    private void setFinalMessage(){
+        if(!usuario.isEmpty()){
+            textView.setText("Oi, "+usuario+"!");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("USUARIO", usuario);
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data.hasExtra("USUARIO")){
+        if(resultCode == 500){
+            usuario = "";
+        }else{
             if(data.getStringExtra("USUARIO").trim().isEmpty()){
                 usuario="";
                 textView.setText("Oi!");
@@ -44,5 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText("Oi, "+usuario+"!");
             }
         }
+       setFinalMessage();
     }
 }

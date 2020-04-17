@@ -21,14 +21,16 @@ public class OutraActivity extends AppCompatActivity {
         btnCancelar = findViewById(R.id.btnCancelar);
         editText = findViewById(R.id.editText);
 
-        if(getIntent().hasExtra("USUARIO")){
-            editText.setText((getIntent().getStringExtra("USUARIO")));
-        }
+        //if(getIntent().hasExtra("USUARIO")){
+            editText.setText(getIntent().getStringExtra("USUARIO"));
+        //}
 
         btnConfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getIntent().putExtra("USUARIO", editText.getText().toString());
+                EditText editText = findViewById(R.id.editText);
+                String newName = editText.getText().toString();
+                getIntent().putExtra("USUARIO", newName);
                 setResult(200, getIntent());
                 finish();
             }
