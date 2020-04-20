@@ -36,16 +36,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setInitialMessage(Bundle savedInstanceState){
+        String saveUser = "";
         if(savedInstanceState != null){
-            usuario = savedInstanceState.getString("USUARIO", "");
+            saveUser = savedInstanceState.getString("USUARIO", "");
         }
+        atualizaUsuario(saveUser);
         setFinalMessage();
     }
 
     private void setFinalMessage(){
         if(!usuario.isEmpty()){
             textView.setText("Oi, "+usuario+"!");
+        }else{
+            textView.setText("Oi!");
         }
+
     }
 
     @Override
@@ -54,20 +59,24 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    private void atualizaUsuario(String nome){
+        usuario = nome;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 500){
-            usuario = "";
-        }else{
+        if(resultCode == 200){
             if(data.getStringExtra("USUARIO").trim().isEmpty()){
-                usuario="";
-                textView.setText("Oi!");
+                atualizaUsuario("");
+                //textView.setText("Oi!");
             }else{
-                usuario=data.getStringExtra("USUARIO");
-                textView.setText("Oi, "+usuario+"!");
+                atualizaUsuario(data.getStringExtra("USUARIO"));
+                //textView.setText("Oi, "+usuario+"!");
             }
+        }else if(resultCode == 500){
+            atualizaUsuario("");
         }
-       setFinalMessage();
+        setFinalMessage();
     }
 }
